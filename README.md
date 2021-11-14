@@ -13,15 +13,15 @@ Antes de mergulhar na implementação, vamos fazer uma rápida visão geral do q
 
 Um problema comum com o qual as implementações tradicionais devem lidar é como lidar com arquivos grandes ou conexões lentas com eficiência. Nas primeiras versões (pré-servlet 3.0), tudo que a especificação JavaEE tinha a oferecer era uma API de bloqueio, portanto, precisávamos de um encadeamento para cada cliente de armazenamento de blob simultâneo. Este modelo tem a desvantagem de exigir mais recursos do servidor (ou seja, máquinas maiores) e torná-los mais vulneráveis ​​a ataques do tipo DoS:
 
-<img src="rective-upload.png">
+<img src="images/rective-upload.png">
 
-<img src="thread-per-client.png">
+<img src="images/thread-per-client.png">
 
 Usando uma pilha reativa, podemos tornar nosso serviço muito menos intensivo em recursos para o mesmo número de clientes. A implementação do reator usa um pequeno número de threads que são despachados em resposta a eventos de conclusão de I/O, como a disponibilidade de novos dados para ler ou a conclusão de uma gravação anterior.
 
 Isso significa que o mesmo thread continua tratando desses eventos - que podem se originar de qualquer uma das conexões de cliente ativas - até que não haja mais trabalho disponível para fazer. Esta abordagem reduz muito o número de mudanças de contexto - uma operação bastante cara - e permite o uso muito eficiente dos recursos disponíveis:
 
-<img src="rective-upload.png">
+<img src="images/rective-upload.png">
 
 # 3. Configuração do projeto
 Nosso projeto de demonstração é um aplicativo Spring Boot WebFlux padrão que inclui as dependências de suporte usuais, como Lombok e JUnit.
